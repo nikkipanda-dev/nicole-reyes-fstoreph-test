@@ -10,6 +10,10 @@
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
+# Prevent Git Bash/MSYS on Windows from mangling container-side Unix paths
+# (e.g. /var/www) passed as docker arguments into Windows paths. No-op elsewhere.
+export MSYS_NO_PATHCONV=1
+
 APP_URL="http://localhost:8000"
 NODE_IMAGE="node:20-alpine"
 

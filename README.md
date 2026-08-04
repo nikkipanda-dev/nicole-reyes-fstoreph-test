@@ -6,7 +6,7 @@ A Laravel + Inertia.js application for managing a product catalog and viewing or
 
 - **Backend:** Laravel 12, Inertia.js (server adapter)
 - **Frontend:** Vue 3, TypeScript, Vite, Tailwind CSS
-- **Auth:** Laravel's built-in authentication (login, registration, password reset, email verification)
+- **Auth:** Laravel's built-in authentication (login)
 - **Database:** MySQL (via Docker)
 
 ## Features
