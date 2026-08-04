@@ -61,39 +61,10 @@ class ProductController
             'product_description' => 'required|string',
             'quantity' => 'required|integer|min:0',
             'price' => 'required|numeric|min:0',
+            'status' => 'required|string|in:draft,published,archived',
         ]);
 
         $product->update($validated);
-
-        return back();
-    }
-
-    /**
-     * Delete a product.
-     */
-    public function destroy(Product $product): RedirectResponse
-    {
-        $product->delete();
-
-        return to_route('products.index');
-    }
-
-    /**
-     * Disable a product.
-     */
-    public function disable(Product $product): RedirectResponse
-    {
-        $product->update(['status' => 'archived']);
-
-        return back();
-    }
-
-    /**
-     * Enable a product.
-     */
-    public function enable(Product $product): RedirectResponse
-    {
-        $product->update(['status' => 'published']);
 
         return back();
     }

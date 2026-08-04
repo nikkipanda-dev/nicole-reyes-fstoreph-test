@@ -12,9 +12,6 @@ Route::middleware(['auth', 'verified'])->prefix('products')->name('products.')->
     Route::get('/', [ProductController::class, 'index'])->name('index');
     Route::post('/', [ProductController::class, 'store'])->name('store');
     Route::put('/{product}', [ProductController::class, 'update'])->name('update');
-    Route::delete('/{product}', [ProductController::class, 'destroy'])->name('destroy');
-    Route::patch('/{product}/disable', [ProductController::class, 'disable'])->name('disable');
-    Route::patch('/{product}/enable', [ProductController::class, 'enable'])->name('enable');
 });
 
 Route::middleware(['auth', 'verified'])->prefix('orders')->name('orders.')->group(function () {

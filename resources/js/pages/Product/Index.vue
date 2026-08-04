@@ -11,7 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { Product } from '@/types';
 import { Head, useForm } from '@inertiajs/vue3';
-import { Eye, Package, Pencil, Trash2 } from 'lucide-vue-next';
+import { Eye, Package, Pencil } from 'lucide-vue-next';
 import { ref } from 'vue';
 
 defineOptions({
@@ -57,6 +57,7 @@ const editForm = useForm({
     product_description: '',
     quantity: 0,
     price: '',
+    status: '',
 });
 const openEdit = (product: Product) => {
     editForm.clearErrors();
@@ -65,6 +66,7 @@ const openEdit = (product: Product) => {
     editForm.product_description = product.product_description;
     editForm.quantity = product.quantity;
     editForm.price = product.price;
+    editForm.status = product.status;
     editOpen.value = true;
 };
 const submitEdit = () => {
@@ -74,23 +76,6 @@ const submitEdit = () => {
         preserveScroll: true,
         preserveState: true,
         onSuccess: () => (editOpen.value = false),
-    });
-};
-
-// Delete modal
-const deleteOpen = ref(false);
-const deletingProduct = ref<Product | null>(null);
-const deleteForm = useForm({});
-const openDelete = (product: Product) => {
-    deletingProduct.value = product;
-    deleteOpen.value = true;
-};
-const submitDelete = () => {
-    if (!deletingProduct.value) return;
-
-    deleteForm.delete(route('products.destroy', [deletingProduct.value.id]), {
-        preserveScroll: true,
-        onSuccess: () => (deleteOpen.value = false),
     });
 };
 </script>
@@ -142,9 +127,6 @@ const submitDelete = () => {
                                 </Button>
                                 <Button variant="ghost" size="icon" @click="openEdit(product)">
                                     <Pencil class="h-4 w-4" />
-                                </Button>
-                                <Button variant="ghost" size="icon" @click="openDelete(product)">
-                                    <Trash2 class="h-4 w-4 text-destructive" />
                                 </Button>
                             </div>
                         </TableCell>
@@ -208,6 +190,20 @@ const submitDelete = () => {
                     </div>
                 </div>
 
+                <div class="grid gap-2">
+                    <Label for="edit_status">Status</Label>
+                    <select
+                        id="edit_status"
+                        v-model="editForm.status"
+                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                    >
+                        <option value="draft">Draft</option>
+                        <option value="published">Published</option>
+                        <option value="archived">Archived</option>
+                    </select>
+                    <InputError :message="editForm.errors.status" />
+                </div>
+
                 <DialogFooter>
                     <DialogClose as-child>
                         <Button type="button" variant="secondary">Cancel</Button>
@@ -215,21 +211,6 @@ const submitDelete = () => {
                     <Button type="submit" :disabled="editForm.processing">Save</Button>
                 </DialogFooter>
             </form>
-        </DialogContent>
-    </Dialog>
-
-    <Dialog v-model:open="deleteOpen">
-        <DialogContent v-if="deletingProduct">
-            <DialogHeader>
-                <DialogTitle>Delete "{{ deletingProduct.product_name }}"?</DialogTitle>
-                <DialogDescription>This action cannot be undone.</DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-                <DialogClose as-child>
-                    <Button variant="secondary">Cancel</Button>
-                </DialogClose>
-                <Button variant="destructive" :disabled="deleteForm.processing" @click="submitDelete">Delete</Button>
-            </DialogFooter>
         </DialogContent>
     </Dialog>
 </template>
