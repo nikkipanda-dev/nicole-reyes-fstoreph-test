@@ -17,11 +17,6 @@ yarn-error.log
 /storage/*.key
 /storage/*.sql
 /storage/pail
-/storage/app/public
-/storage/framework/cache/data
-/storage/framework/sessions
-/storage/framework/views
-/storage/logs
 
 # Database
 /database/*.sqlite
