@@ -41,12 +41,10 @@ class ProductController
             'product_description' => 'required|string',
             'quantity' => 'required|integer|min:0',
             'price' => 'required|numeric|min:0',
+            'status' => 'required|string|in:draft,published,archived',
         ]);
 
-        Product::create([
-            ...$validated,
-            'status' => 'draft',
-        ]);
+        Product::create($validated);
 
         return back();
     }

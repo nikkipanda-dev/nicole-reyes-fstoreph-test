@@ -25,6 +25,10 @@ class OrderController
 
         return Inertia::render('Order/Index', [
             'orders' => $orders,
+            'summary' => [
+                'count' => $orders->count(),
+                'total' => $orders->sum('price'),
+            ],
         ]);
     }
 }

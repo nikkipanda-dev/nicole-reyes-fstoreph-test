@@ -48,6 +48,7 @@ const createForm = useForm({
     product_description: '',
     quantity: 0,
     price: '',
+    status: 'draft',
 });
 const openCreate = () => {
     createForm.clearErrors();
@@ -193,6 +194,20 @@ const submitEdit = () => {
                         <Input id="create_price" type="number" min="0" step="0.01" v-model="createForm.price" />
                         <InputError :message="createForm.errors.price" />
                     </div>
+                </div>
+
+                <div class="grid gap-2">
+                    <Label for="create_status">Status</Label>
+                    <select
+                        id="create_status"
+                        v-model="createForm.status"
+                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                    >
+                        <option value="draft">Draft</option>
+                        <option value="published">Published</option>
+                        <option value="archived">Archived</option>
+                    </select>
+                    <InputError :message="createForm.errors.status" />
                 </div>
 
                 <DialogFooter>

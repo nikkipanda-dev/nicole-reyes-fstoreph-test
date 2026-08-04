@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Card } from '@/components/ui/card';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { Order } from '@/types';
 import { Head } from '@inertiajs/vue3';
@@ -13,6 +13,10 @@ defineOptions({
 
 defineProps<{
     orders: Order[];
+    summary: {
+        count: number;
+        total: number;
+    };
 }>();
 
 const stickyHeadClass =
@@ -52,6 +56,12 @@ const stickyHeadClass =
                         <TableCell class="text-right font-medium tabular-nums">${{ order.price }}</TableCell>
                     </TableRow>
                 </TableBody>
+                <TableFooter v-if="orders.length > 0">
+                    <TableRow class="hover:bg-transparent">
+                        <TableCell colspan="2">{{ summary.count }} {{ summary.count === 1 ? 'order' : 'orders' }}</TableCell>
+                        <TableCell class="text-right tabular-nums">${{ summary.total.toFixed(2) }}</TableCell>
+                    </TableRow>
+                </TableFooter>
             </Table>
         </Card>
     </div>
