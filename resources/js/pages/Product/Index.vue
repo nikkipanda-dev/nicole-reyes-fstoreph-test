@@ -11,7 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { Product } from '@/types';
 import { Head, useForm } from '@inertiajs/vue3';
-import { Eye, Package, Pencil } from 'lucide-vue-next';
+import { Eye, Package, Pencil, Plus } from 'lucide-vue-next';
 import { ref } from 'vue';
 
 defineOptions({
@@ -39,6 +39,29 @@ const statusVariant = (status: string): BadgeVariants['variant'] => {
         default:
             return 'outline';
     }
+};
+
+// Create modal
+const createOpen = ref(false);
+const createForm = useForm({
+    product_name: '',
+    product_description: '',
+    quantity: 0,
+    price: '',
+});
+const openCreate = () => {
+    createForm.clearErrors();
+    createForm.reset();
+    createOpen.value = true;
+};
+const submitCreate = () => {
+    createForm.post(route('products.store'), {
+        preserveScroll: true,
+        onSuccess: () => {
+            createOpen.value = false;
+            createForm.reset();
+        },
+    });
 };
 
 // View modal
@@ -89,6 +112,10 @@ const submitEdit = () => {
                 <h1 class="text-xl font-semibold tracking-tight">Products</h1>
                 <p class="text-sm text-muted-foreground">Manage your catalog, pricing, and inventory.</p>
             </div>
+            <Button @click="openCreate">
+                <Plus class="h-4 w-4" />
+                Add product
+            </Button>
         </div>
 
         <Card class="py-0">
@@ -135,6 +162,48 @@ const submitEdit = () => {
             </Table>
         </Card>
     </div>
+
+    <Dialog v-model:open="createOpen">
+        <DialogContent>
+            <form class="space-y-4" @submit.prevent="submitCreate">
+                <DialogHeader>
+                    <DialogTitle>Add product</DialogTitle>
+                </DialogHeader>
+
+                <div class="grid gap-2">
+                    <Label for="create_product_name">Product name</Label>
+                    <Input id="create_product_name" v-model="createForm.product_name" />
+                    <InputError :message="createForm.errors.product_name" />
+                </div>
+
+                <div class="grid gap-2">
+                    <Label for="create_product_description">Description</Label>
+                    <Textarea id="create_product_description" v-model="createForm.product_description" />
+                    <InputError :message="createForm.errors.product_description" />
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="grid gap-2">
+                        <Label for="create_quantity">Quantity</Label>
+                        <Input id="create_quantity" type="number" min="0" v-model="createForm.quantity" />
+                        <InputError :message="createForm.errors.quantity" />
+                    </div>
+                    <div class="grid gap-2">
+                        <Label for="create_price">Price</Label>
+                        <Input id="create_price" type="number" min="0" step="0.01" v-model="createForm.price" />
+                        <InputError :message="createForm.errors.price" />
+                    </div>
+                </div>
+
+                <DialogFooter>
+                    <DialogClose as-child>
+                        <Button type="button" variant="secondary">Cancel</Button>
+                    </DialogClose>
+                    <Button type="submit" :disabled="createForm.processing">Create</Button>
+                </DialogFooter>
+            </form>
+        </DialogContent>
+    </Dialog>
 
     <Dialog v-model:open="viewOpen">
         <DialogContent v-if="viewingProduct">
